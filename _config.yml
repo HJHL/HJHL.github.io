@@ -103,15 +103,16 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: git
-  repo: git@github.com:HJHL/HJHL.github.io.git
-  branch: blog
+  - type: git
+    repo: git@github.com:HJHL/HJHL.github.io.git
+    branch: blog
+  - type: leancloud_counter_security_sync
 
 leancloud_counter_security:
-  enable_sync: false
-  app_id: IxVxpiOfvwBVSOeWrLH1r4Oq-gzGzoHsz # <your app id>
-  app_key: v6Vg4Dlb3LSOT9sKfp5SVYWY # <your app key>
+  enable_sync: true
+  app_id: KPdKpT6fYBrDy8Fe3CXwldqH-gzGzoHsz # <your app id>
+  app_key: WyKTvJaO7JzlUeDMhyUq1yge # <your app key>
   # Required for apps from CN region
-  server_url: https://ixvxpiof.lc-cn-n1-shared.com # <your server url>
+  server_url: https://kpdkpt6f.lc-cn-n1-shared.com # <your server url>
   username: lijiahui
   password: jiahuidev
