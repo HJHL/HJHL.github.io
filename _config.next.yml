@@ -683,7 +683,7 @@ cloudflare_analytics:
 # Show number of visitors of each article.
 # You can visit https://www.leancloud.cn to get AppID and AppKey.
 leancloud_visitors:
-  enable: true
+  enable: false
   app_id: IxVxpiOfvwBVSOeWrLH1r4Oq-gzGzoHsz # <your app id>
   app_key: v6Vg4Dlb3LSOT9sKfp5SVYWY # <your app key>
   # Required for apps from CN region
