@@ -31,4 +31,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: blog
+          publish_dir: ./public
           force_orphan: true
