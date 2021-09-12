@@ -38,6 +38,8 @@ jobs:
         run: yarn build
         
       - name: Deploy Pages
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           ./node_modules/hexo-cli/bin/hexo deploy
         
