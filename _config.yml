@@ -3,17 +3,18 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle: ''
-description: ''
-keywords:
-author: John Doe
-language: en
+title: 也说Android
+subtitle: '一个人的自留地'
+description: '记录我工作、学习与生活的地方'
+keywords: Android C C++ Kotlin Java
+author: Li Jiahui
+language:
+  - zh-CN
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://hjhl.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
