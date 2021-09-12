@@ -17,12 +17,14 @@ jobs:
         with:
           submodules: recursive
           
-      - name: Setup SSH & known_hosts
+      - name: Setup Git & SSH & known_hosts
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+          git config --global user.name "${{ secrets.GIT_NAME }}"
 
       - name: Setup Node.js
         uses: actions/setup-node@v2.4.0
