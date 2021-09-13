@@ -124,6 +124,10 @@ baidu_analytics: <you-baidu-analytics-app-id>
 * GIT_EMAIL：部署博客时，提交commit用到的email
 * GIT_NAME：部署博客时，提交commit的name
 
+#### 评论系统
 
+鉴于Valine已经不再维护，这里选择的是新出的[Twikoo](https://twikoo.js.org/)
+
+部署用到了[MonoDB]([MongoDB Atlas | MongoDB](https://www.mongodb.com/zh-cn/cloud/atlas/register))和[Vercel](https://vercel.com/)。前者用于存储，后者作为静态网站与存储之间的桥梁（保证数据库密码不外泄）。
 
 TBD……
