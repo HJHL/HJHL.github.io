@@ -683,7 +683,7 @@ cloudflare_analytics:
 # Show number of visitors of each article.
 # You can visit https://www.leancloud.cn to get AppID and AppKey.
 leancloud_visitors:
-  enable: false
+  enable: true
   app_id: KPdKpT6fYBrDy8Fe3CXwldqH-gzGzoHsz # <your app id>
   app_key: WyKTvJaO7JzlUeDMhyUq1yge # <your app key>
   # Required for apps from CN region
@@ -882,5 +882,5 @@ images: images
 
 twikoo:
   enable: true
-  visitor: true
+  visitor: false
   envId: https://twikoo-bblogddy.vercel.app
