@@ -18,7 +18,7 @@ tags:
 
 ### 2. 部署位置选择
 
-既然选择了静态博客，肯定是首选部署在[**Github Pages**]([GitHub Pages | Websites for you and your projects, hosted directly from your GitHub repository. Just edit, push, and your changes are live.](https://pages.github.com/))上了。后面为了优化国内的访问体验再说，比如套CDN，或者部署到Gitee，再或者搞个VPS。
+既然选择了静态博客，肯定是首选部署在[**Github Pages**](https://pages.github.com/)上了。后面为了优化国内的访问体验再说，比如套CDN，或者部署到Gitee，再或者搞个VPS。
 
 ### 3. 部署方式的选择
 
@@ -108,7 +108,7 @@ baidu_analytics: <you-baidu-analytics-app-id>
 * [Hexo Next leancloud文章阅读次数配置](https://www.jianshu.com/p/e0a719bac963)
 * https://blog.garryde.com/archives/48665.html
 
-注意：这里需要安装插件hexo-leancloud-counter-security，请不要直接用https://github.com/theme-next/hexo-leancloud-counter-security，因为它存在bug。可以使用这个：https://github.com/799953468/hexo-leancloud-counter-security。
+注意：这里需要安装插件hexo-leancloud-counter-security，请不要直接用[https://github.com/theme-next/hexo-leancloud-counter-security](https://github.com/theme-next/hexo-leancloud-counter-security)，因为它存在bug。建议使用这个：[https://github.com/799953468/hexo-leancloud-counter-security](https://github.com/theme-next/hexo-leancloud-counter-security)。
 
 #### Github Action自动化部署
 
