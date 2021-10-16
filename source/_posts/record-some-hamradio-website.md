@@ -10,3 +10,6 @@ tags:
 
 * [websdr.org](http://websdr.org/)：针对没有无线电台设备的`ham`，可以在这里体验**接收**无线电，一般国外的资源居多，可以听国外`ham`通联或者国外广播。只能听**不能发**。
 * [AMSAT Argentina](http://amsat.org.ar/)：可以用这个网站追踪卫星/空间站轨道
+* [全国各省市广播电台大全](http://www.hotelaah.com/radio.html)：想听广播可以到上面查看
+* [全国业余无线电中继频率查询](http://weixin.cqcqcq.cn/)：查询中继电台信息
+* [全国中继列表](http://bbs.cqcqcq.com/portal.php?mod=list&catid=1)：查询中继电台信息
