@@ -38,7 +38,12 @@ Android中，Activity是基于返回栈管理的。这意思是说，当打开�
 
 ## 遗留问题
 
-Q1：安卓系统中，只有一个栈吗？如果不是，有多少个栈？
+Q1：安卓系统中，只有一个任务栈吗？如果不是，有多少个？
 
+当然不是。系统中会存在多个栈，每当一个App启动，就会为该App分配一个App的任务栈，然后根据App代码中Activity的launchMode，可能存在多个任务栈。
 
+Q2：如何查看安卓的栈？
 
+`adb shell dumpsys activity | grep -i <your-package-name>`，然后如下图：
+
+![检查App的任务栈](/images/check-android-app-stack.jpg)
