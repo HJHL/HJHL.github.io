@@ -13,3 +13,4 @@ tags:
 * [全国各省市广播电台大全](http://www.hotelaah.com/radio.html)：想听广播可以到上面查看
 * [全国业余无线电中继频率查询](http://weixin.cqcqcq.cn/)：查询中继电台信息
 * [全国中继列表](http://bbs.cqcqcq.com/portal.php?mod=list&catid=1)：查询中继电台信息
+* [工业和信息化部政务服务平台——结果查询](http://ythzxfw.miit.gov.cn/resultQuery)：查询设备核准号
