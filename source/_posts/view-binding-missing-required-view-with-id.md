@@ -1,5 +1,5 @@
 ---
-title: View Binding 遇到 `java.lang.NullPointerException: Missing required view with ID`
+title: View Binding 遇到 `Missing required view with ID`
 date: 2021-12-25 21:31:25
 tags:
 - Android
