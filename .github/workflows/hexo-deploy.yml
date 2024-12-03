@@ -27,9 +27,9 @@ jobs:
           git config --global user.name "${{ secrets.GIT_NAME }}"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2.4.0
+        uses: actions/setup-node@v4.1.0
         with:
-          node-version: "16"
+          node-version: "23.3.0"
 
       - name: Install Dependencies
         run: yarn install
