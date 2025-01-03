@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="cmIDbBro-pTmxbgiOrH3CMGcqhIBvJjQlqYvHkTM9aw">
+  <meta name="baidu-site-verification" content="code-i4bacjL2gC">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hjhl.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="学习音视频，绕不过WebRTC这个大名鼎鼎的框架，今天来看下如何使用Docker编译&amp;调试WebRTC吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Docker编译&amp;调试WebRTC源码">
+<meta property="og:url" content="https://hjhl.github.io/2021/11/14/build-and-debug-webrtc-using-docker/index.html">
+<meta property="og:site_name" content="XX的记事本">
+<meta property="og:description" content="学习音视频，绕不过WebRTC这个大名鼎鼎的框架，今天来看下如何使用Docker编译&amp;调试WebRTC吧。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hjhl.github.io/images/build_tools_help_info.png">
+<meta property="og:image" content="https://hjhl.github.io/images/edit-configurations.png">
+<meta property="og:image" content="https://hjhl.github.io/images/select-debug-type.png">
+<meta property="og:image" content="https://hjhl.github.io/images/mapping-source-files.png">
+<meta property="og:image" content="https://hjhl.github.io/images/check-mapping-dir.png">
+<meta property="og:image" content="https://hjhl.github.io/images/java-debug.png">
+<meta property="og:image" content="https://hjhl.github.io/images/native-debug.png">
+<meta property="article:published_time" content="2021-11-14T08:55:40.000Z">
+<meta property="article:modified_time" content="2025-01-03T12:09:57.675Z">
+<meta property="article:author" content="Li Jiahui">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="WebRTC">
+<meta property="article:tag" content="音视频">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hjhl.github.io/images/build_tools_help_info.png">
+
+
+<link rel="canonical" href="https://hjhl.github.io/2021/11/14/build-and-debug-webrtc-using-docker/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hjhl.github.io/2021/11/14/build-and-debug-webrtc-using-docker/","path":"2021/11/14/build-and-debug-webrtc-using-docker/","title":"基于Docker编译&调试WebRTC源码"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基于Docker编译&调试WebRTC源码 | XX的记事本</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?2256ac363bc50a457e9e587fad9771f2"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XX的记事本</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">明德砺志，求知笃行</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEDocker%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">配置Docker环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%AE%89%E8%A3%85Docker"><span class="nav-number">3.0.1.</span> <span class="nav-text">1. 安装Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%8E%B7%E5%8F%96Ubuntu-18-04%E9%95%9C%E5%83%8F"><span class="nav-number">3.0.2.</span> <span class="nav-text">2. 获取Ubuntu 18.04镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AAUbuntu-18-04%E5%AE%B9%E5%99%A8"><span class="nav-number">3.0.3.</span> <span class="nav-text">3. 创建一个Ubuntu 18.04容器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%AE%B9%E5%99%A8%E5%86%85%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">3.0.4.</span> <span class="nav-text">4. 容器内系统的基础配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%BA%90%E7%A0%81%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7"><span class="nav-number">3.1.</span> <span class="nav-text">安装源码下载工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E6%BA%90%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">下载源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91%E4%BE%9D%E8%B5%96"><span class="nav-number">3.3.</span> <span class="nav-text">安装编译依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E7%BC%96%E8%AF%91"><span class="nav-number">3.4.</span> <span class="nav-text">开始编译</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B0%83%E8%AF%95"><span class="nav-number">4.</span> <span class="nav-text">调试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91Debug%E5%8C%85"><span class="nav-number">4.1.</span> <span class="nav-text">编译Debug包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEbuild-gradle"><span class="nav-number">4.2.</span> <span class="nav-text">配置build.gradle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E8%B0%83%E8%AF%95"><span class="nav-number">4.3.</span> <span class="nav-text">开始调试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E6%BA%90%E7%A0%81%E4%BB%8E%E5%AE%B9%E5%99%A8%E5%88%B0%E5%AE%BF%E4%B8%BB%E6%9C%BA"><span class="nav-number">4.3.1.</span> <span class="nav-text">同步源码从容器到宿主机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E8%B0%83%E8%AF%95%E9%80%89%E9%A1%B9"><span class="nav-number">4.3.2.</span> <span class="nav-text">配置调试选项</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E8%AF%95Java"><span class="nav-number">4.3.3.</span> <span class="nav-text">调试Java</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E8%AF%95native"><span class="nav-number">4.3.4.</span> <span class="nav-text">调试native</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结束语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Li Jiahui</p>
+  <div class="site-description" itemprop="description">记录我学习，生活与工作的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hjhl.github.io/2021/11/14/build-and-debug-webrtc-using-docker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Li Jiahui">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XX的记事本">
+      <meta itemprop="description" content="记录我学习，生活与工作的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基于Docker编译&调试WebRTC源码 | XX的记事本">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于Docker编译&调试WebRTC源码
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-11-14 08:55:40" itemprop="dateCreated datePublished" datetime="2021-11-14T08:55:40+00:00">2021-11-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-03 12:09:57" itemprop="dateModified" datetime="2025-01-03T12:09:57+00:00">2025-01-03</time>
+    </span>
+
+  
+    <span id="/2021/11/14/build-and-debug-webrtc-using-docker/" class="post-meta-item leancloud_visitors" data-flag-title="基于Docker编译&调试WebRTC源码" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>学习音视频，绕不过WebRTC这个大名鼎鼎的框架，今天来看下如何使用Docker编译&amp;调试WebRTC吧。</p>
+<span id="more"></span>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文将带大家学习如何在Docker下，配置WebRTC的编译&amp;调试开发环境——基于Ubuntu 18.04系统，并记录了对WebRTC Sdk的Java和native进行调试的方法。</p>
+<p>WebRTC是谷歌的一个著名开源项目之一，托管在谷歌的服务器上。由于众所周知的原因，谷歌的产品服务难以在国内访问。请各位合理使用网络，准备上网加速工具，可以避免很多问题。</p>
+<p>WebRTC官网：<a target="_blank" rel="noopener" href="https://webrtc.org/">WebRTC</a>。</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><h2 id="配置Docker环境"><a href="#配置Docker环境" class="headerlink" title="配置Docker环境"></a>配置Docker环境</h2><blockquote>
+<p>本文主要以MacOS和Linux为例，Windows用户请找到对应命令的图形化操作路径即可。</p>
+</blockquote>
+<h4 id="1-安装Docker"><a href="#1-安装Docker" class="headerlink" title="1. 安装Docker"></a>1. 安装Docker</h4><p>请参考Docker官方文档进行安装：<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">Install Docker Engine</a>。</p>
+<h4 id="2-获取Ubuntu-18-04镜像"><a href="#2-获取Ubuntu-18-04镜像" class="headerlink" title="2. 获取Ubuntu 18.04镜像"></a>2. 获取Ubuntu 18.04镜像</h4><blockquote>
+<p>强烈建议镜像使用 Ubuntu 18.04及以上版本，避免后续环境配置的问题！！！</p>
+</blockquote>
+<p>打开终端，执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:18.04</span><br></pre></td></tr></table></figure>
+
+<p>即可获取到Ubuntu 18.04镜像。</p>
+<h4 id="3-创建一个Ubuntu-18-04容器"><a href="#3-创建一个Ubuntu-18-04容器" class="headerlink" title="3. 创建一个Ubuntu 18.04容器"></a>3. 创建一个Ubuntu 18.04容器</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 22:2222 ubuntu:18.04</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里映射了容器内的22端口到主机的2222端口，为的是后续使用<code>rsync</code>同步文件方便。</p>
+</blockquote>
+<h4 id="4-容器内系统的基础配置"><a href="#4-容器内系统的基础配置" class="headerlink" title="4. 容器内系统的基础配置"></a>4. 容器内系统的基础配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt upgrade -y</span><br><span class="line">apt install -y git curl python3 python3-pip zsh lsb-release</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装源码下载工具"><a href="#安装源码下载工具" class="headerlink" title="安装源码下载工具"></a>安装源码下载工具</h3><p>下载WebRTC源码需要用到Google开发的<a target="_blank" rel="noopener" href="https://chromium.googlesource.com/chromium/tools/depot_tools.git">depot tools</a>，它是为Chromium项目专门开发的一套源码管理工具，底层用到了Git。</p>
+<blockquote>
+<p>depot tools的使用文档：<a target="_blank" rel="noopener" href="https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools.html">depot tools(7) Manual Page</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/.local</span><br><span class="line">git <span class="built_in">clone</span> https://chromium.googlesource.com/chromium/tools/depot_tools.git ~/.local/depot_tools</span><br><span class="line"><span class="comment"># 如果使用的是zsh，请将.bashrc改为.zshrc</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;export PATH=<span class="variable">$HOME</span>/.local/depot_tools:<span class="variable">$PATH</span>&quot;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载源码"><a href="#下载源码" class="headerlink" title="下载源码"></a>下载源码</h3><p>因为主要在Android平台上进行开发，所以仅下载WebRTC核心+Android部分的代码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/code/webrtc</span><br><span class="line"><span class="built_in">cd</span> ~/code/webrtc</span><br><span class="line"><span class="comment"># 下载WebRTC核心源码+用于Android平台的Sdk源码</span></span><br><span class="line"><span class="comment"># 源码下载完成后，位于~/code/webrtc/src目录</span></span><br><span class="line">fetch --nohooks --no-history webrtc_android</span><br><span class="line"><span class="comment"># 同步下依赖</span></span><br><span class="line">gclient <span class="built_in">sync</span></span><br></pre></td></tr></table></figure>
+
+<p>上面拉取的是最新的主线代码，强烈建议使用<code>--no-history</code>参数，加快下载速度，减少磁盘占用。</p>
+<blockquote>
+<p>2021年11月13日 完整下完整套代码，约27G～</p>
+</blockquote>
+<p>一般项目开发中会选择一个正式的release版本。截止到2021年11月13日，最新的版本是<code>M85</code>，下面基于M85创建一个自己的开发分支。</p>
+<blockquote>
+<p>Release信息可以在这查询：<a target="_blank" rel="noopener" href="https://webrtc.github.io/webrtc-org/release-notes/">Chrome Release Notes | WebRTC</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 基于M85 release（对应的分支名为branch-heads/4183）创建一个名为m85的分支，并且切换过去</span></span><br><span class="line">git checkout -b m85 branch-heads/4183</span><br><span class="line"><span class="comment"># 再次同步下依赖</span></span><br><span class="line">gclient <span class="built_in">sync</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="安装编译依赖"><a href="#安装编译依赖" class="headerlink" title="安装编译依赖"></a>安装编译依赖</h3><p>在WebRTC源码中，包含了<strong>自动安装编译依赖</strong>的脚本，直接使用即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果没有安装python命令，需要软链接下</span></span><br><span class="line"><span class="built_in">ln</span> -s /usr/bin/python3 /usr/bin/python</span><br><span class="line"><span class="comment"># 安装WebRTC基础的依赖</span></span><br><span class="line">./build/install-build-deps.sh</span><br><span class="line"><span class="comment"># 安装编译Web RTC安卓Sdk需要的依赖</span></span><br><span class="line">./build/install-build-deps-android.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h3><p>同样，WebRTC源码中包含了编译Android AAR的脚本，直接使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tools_webrtc/android/build_aar.py --build-dir Build --<span class="built_in">arch</span> arm64-v8a</span><br></pre></td></tr></table></figure>
+
+<p>上面的命令中，我们指定了<strong>编译中间产物的路径</strong>和<strong>目标架构</strong>。</p>
+<p>可以通过<code>./tools_webrtc/android/build_aar.py -h</code>查看可传入的参数列表及详细的信息：</p>
+<p><img src="/images/build_tools_help_info.png" alt="编译AAR脚本输出的帮助信息"></p>
+<p>从图中可以看到WebRTC支持编译<code>armeabi-v7a</code>、<code>arm64-v8a</code>、<code>x86</code>、<code>x86_64</code>这四种架构。</p>
+<blockquote>
+<p>建议只编译所需架构，减少非必要的时间。笔者用nuci5beh（豆子峡谷）单编译arm64-v8a架构，花了<strong>十分钟</strong>。</p>
+</blockquote>
+<p>最终编译产物（aar文件）将会在<code>~/code/webrtc/src/</code>目录下，即<code>~/code/webrtc/src/libwebrtc.aar</code>。</p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>光说不练假把式，来看下如何使用Android Studio调试WebRTC Android Sdk的Java和native代码吧。</p>
+<p>WebRTC官方给的Android Demo是这个：<a target="_blank" rel="noopener" href="https://webrtc.googlesource.com/src/+/main/examples/androidapp/">examples&#x2F;androidapp - src - Git at Google (googlesource.com)</a>。</p>
+<p>但由于一些问题，无法使用Android Studio进行调试。原因可看：<a target="_blank" rel="noopener" href="https://bugs.chromium.org/p/webrtc/issues/detail?id=9282">9282 - Support Android Studio for Android development - webrtc (chromium.org)</a>。</p>
+<p>幸运的是，国内的小伙伴<a target="_blank" rel="noopener" href="https://github.com/mthli">mthli (Matthew Lee) (github.com)</a>提供了一份可导入Android Studio进行调试的Demo：<a target="_blank" rel="noopener" href="https://github.com/mthli/YaaRTC">YaaRTC</a>。我们用它来演示如何进行调试吧。</p>
+<h3 id="编译Debug包"><a href="#编译Debug包" class="headerlink" title="编译Debug包"></a>编译Debug包</h3><p>通常，调试需要用到包含符号信息等调试信息的包，即Debug包。但是在编译时，默认会把调试信息strip掉。因此需要修改下编译脚本，并重新构建生成<code>aar</code>文件。</p>
+<blockquote>
+<p><strong>建议参考</strong><a target="_blank" rel="noopener" href="https://webrtc.mthli.com/basic/webrtc-breakpoint/">断点调试 - WebRTC 学习指南 (mthli.com)</a> 。这里抄录下相关配置。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改~/code/webrtc/src/build/toolchain/android/BUILD.gn文件</span></span><br><span class="line"><span class="comment"># 注意，~/code/webrtc/src/build/是自动生成的文件夹</span></span><br><span class="line">...</span><br><span class="line">template(<span class="string">&quot;android_clang_toolchain&quot;</span>) &#123;</span><br><span class="line">  ...</span><br><span class="line">  _prefix = rebase_path(<span class="string">&quot;<span class="variable">$clang_base_path</span>/bin&quot;</span>, root_build_dir)</span><br><span class="line">  cc = <span class="string">&quot;<span class="variable">$_prefix</span>/clang&quot;</span></span><br><span class="line">  cxx = <span class="string">&quot;<span class="variable">$_prefix</span>/clang++&quot;</span></span><br><span class="line">  ar = <span class="string">&quot;<span class="variable">$_prefix</span>/llvm-ar&quot;</span></span><br><span class="line">  ld = cxx</span><br><span class="line">  readelf = _tool_prefix + <span class="string">&quot;readelf&quot;</span></span><br><span class="line">  nm = _tool_prefix + <span class="string">&quot;nm&quot;</span></span><br><span class="line">  <span class="comment"># 注释掉下面两行配置，即可实现 unstrip</span></span><br><span class="line">  <span class="comment"># strip = rebase_path(&quot;//buildtools/third_party/eu-strip/bin/eu-strip&quot;,</span></span><br><span class="line">  <span class="comment">#                     root_build_dir)</span></span><br><span class="line">  <span class="comment"># use_unstripped_as_runtime_outputs = android_unstripped_runtime_outputs</span></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>编译时，注意还需要添加一些参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tools_webrtc/android/build_aar.py --build-dir=Build --<span class="built_in">arch</span> arm64-v8a --extra-gn-args <span class="string">&quot;is_debug=true symbol_level=2 android_full_debug=true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>等待编译完成，这样就得到了带调试信息的Debug包。记得用它替换掉项目中正在用的<code>libwebrtc.aar</code>。</p>
+<h3 id="配置build-gradle"><a href="#配置build-gradle" class="headerlink" title="配置build.gradle"></a>配置<code>build.gradle</code></h3><p>除了<strong>需要Debug包</strong>以外，还需要在引用了WebRTC Android Sdk模块的<code>build.gradle</code>中，做如下修改：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">  ...</span><br><span class="line">  buildTypes &#123;</span><br><span class="line">    ...</span><br><span class="line">    debug &#123;    </span><br><span class="line">      ...</span><br><span class="line">      debuggable <span class="literal">true</span></span><br><span class="line">      jniDebuggable <span class="literal">true</span></span><br><span class="line">      minifyEnabled <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  ...</span><br><span class="line">  packagingOptions &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// 这里禁止strip了arm64-v8a架构的so文件</span></span><br><span class="line">    <span class="comment">// 如果使用的是其它架构，按类似的方法加即可</span></span><br><span class="line">    doNotStrip <span class="string">&quot;*/arm64-v8a/*.so&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/mthli/YaaRTC">YaaRTC</a>已经配置好了，不放心的小伙伴可以检查下。</p>
+<h3 id="开始调试"><a href="#开始调试" class="headerlink" title="开始调试"></a>开始调试</h3><h4 id="同步源码从容器到宿主机"><a href="#同步源码从容器到宿主机" class="headerlink" title="同步源码从容器到宿主机"></a>同步源码从容器到宿主机</h4><blockquote>
+<p>如果仅需要调试WebRTC SDK的Java代码，可跳过此步骤。</p>
+</blockquote>
+<p>调试Native层需要用到源码，由于WebRTC的源码位于容器中，因此需要先把它弄到宿主机。可以直接使用<code>docker cp</code>命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用Docker cp命令</span></span><br><span class="line">docker <span class="built_in">cp</span> &#123;container-id&#125;:&#123;path/to/webrtc/&#125; ~/code/webrtc</span><br><span class="line"><span class="comment"># 上面这条命令将会把容器中的webrtc源码拷贝到本地的～/code/webrtc</span></span><br></pre></td></tr></table></figure>
+
+<p>很明显，这样做有缺点：</p>
+<ol>
+<li>宿主机和容器中各有一份完全相同的源码，占据磁盘空间。</li>
+<li>这样会把<strong>整份文件夹</strong>（包括check用的metadata）拷贝到宿主机，其实没有必要。</li>
+</ol>
+<p>关于第一点，笔者认为可以通过sambad等方式，将容器的源码挂在到本地实现（尚未验证）。因为本地不需要编译，理论不会对容器内的编译产生影响。</p>
+<p>关于第二点，事实上只需要同步部分native代码。因此，不嫌麻烦，可以手动<strong>只同步</strong>特定文件夹。如<code>~/code/webrtc/src/pc/</code>。</p>
+<p>其实第二点还有一个更好的解决方案，就是使用<code>rsync</code>。它支持<strong>增量同步</strong>和<strong>指定同步&#x2F;屏蔽特定文件</strong>。可以完美解决我们的第二点需求。此处不做讨论。</p>
+<h4 id="配置调试选项"><a href="#配置调试选项" class="headerlink" title="配置调试选项"></a>配置调试选项</h4><p>如果需要调试Java和native，需要修改<code>debug type</code>为<code>Dual</code>。操作如下图：</p>
+<p><img src="/images/edit-configurations.png" alt="编辑配置"></p>
+<p><img src="/images/select-debug-type.png" alt="Debug Type选择Dual"></p>
+<p>在LLDB Debugger启动前，还需要对源码文件进行映射（mapping）——因为Sdk是在容器中编译的，和宿主机上实际的位置并不一致。</p>
+<p>按如下操作添加映射规则：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">settings <span class="built_in">set</span> target.source-map &#123;符号文件中的路径&#125; &#123;宿主机中实际的路径&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/mapping-source-files.png" alt="添加源文件映射规则"></p>
+<p>其中，<strong>符号文件中的路径</strong>，需要「开启Debug」+「进行一次呼叫然后挂断」，再按下图步骤，使用如下命令查看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image lookup -vrn webrtc::PeerConnection::RestartIce</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/check-mapping-dir.png" alt="查询符号文件中的路径"></p>
+<blockquote>
+<p>注意到有一个有趣的现象：该应用在挂断时<strong>会发生Crash</strong>。开始不明白为什么，以为是个Bug，等到写此文时突然意识到：如果不crash，那我们恐怕无法拿到符号文件中的路径——因为没办法进行上图中第4步。</p>
+</blockquote>
+<h4 id="调试Java"><a href="#调试Java" class="headerlink" title="调试Java"></a>调试Java</h4><p>跟普通应用的调试方法一样，在需要调试的位置添加断点即可，如下图所示。</p>
+<p><img src="/images/java-debug.png" alt="java debug"></p>
+<h4 id="调试native"><a href="#调试native" class="headerlink" title="调试native"></a>调试native</h4><p>通过Android Studio打开C++源码文件，然后在需要调试位置加上断点，再进入Debug。如下图所示：</p>
+<p><img src="/images/native-debug.png" alt="native debug"></p>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>非常感谢<a target="_blank" rel="noopener" href="https://github.com/mthli">@mthil</a>分享的经验！</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://webrtc.googlesource.com/src/+/main/docs/native-code/android/index.md">WebRTC Android development (googlesource.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://commondatastorage.googleapis.com/chrome-infra-docs/flat/depot_tools/docs/html/depot_tools_tutorial.html">depot tools tutorial(7) (commondatastorage.googleapis.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://webrtc.mthli.com/basic/webrtc-compilation/">编译源码 - WebRTC 学习指南 (mthli.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://webrtc.mthli.com/basic/webrtc-breakpoint/">断点调试 - WebRTC 学习指南 (mthli.com)</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/WebRTC/" rel="tag"># WebRTC</a>
+              <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/" rel="tag"># 音视频</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/11/08/android-use-view-binding/" rel="prev" title="在安卓中使用ViewBinding">
+                  <i class="fa fa-angle-left"></i> 在安卓中使用ViewBinding
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/11/21/download-bing-pictures-of-the-day/" rel="next" title="「Kotlin 101」下载必应每日一图">
+                  「Kotlin 101」下载必应每日一图 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments"><div id="twikoo-comments"></div></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Li Jiahui</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">14k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">50 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"KPdKpT6fYBrDy8Fe3CXwldqH-gzGzoHsz","app_key":"WyKTvJaO7JzlUeDMhyUq1yge","server_url":"https://kpdkpt6f.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+<script class="next-config" data-name="twikoo" type="application/json">{"enable":true,"visitor":false,"envId":"https://twitoo-mzzx09z7d-chenyusheng-ljhaccn.vercel.app/","el":"#twikoo-comments"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.twikoo.el)
+    .then(() => NexT.utils.getScript(
+      CONFIG.twikoo.jsUrl || 'https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js',
+      { condition: window.twikoo }
+    ))
+    .then(() => {
+      twikoo.init(CONFIG.twikoo);
+    });
+});
+</script>
+<style>
+.post-block, .comments {
+  overflow: visible;
+}
+.tk-owo-emotion {
+  display: inline-block;
+}
+</style>
+
+</body>
+</html>

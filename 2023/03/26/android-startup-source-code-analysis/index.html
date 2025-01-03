@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="cmIDbBro-pTmxbgiOrH3CMGcqhIBvJjQlqYvHkTM9aw">
+  <meta name="baidu-site-verification" content="code-i4bacjL2gC">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hjhl.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Startup是 Jetpack 中用于解决应用程序启动时任务初始化的一个组件。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Startup 使用和源码分析">
+<meta property="og:url" content="https://hjhl.github.io/2023/03/26/android-startup-source-code-analysis/index.html">
+<meta property="og:site_name" content="XX的记事本">
+<meta property="og:description" content="Startup是 Jetpack 中用于解决应用程序启动时任务初始化的一个组件。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-26T20:04:04.000Z">
+<meta property="article:modified_time" content="2025-01-03T12:09:57.675Z">
+<meta property="article:author" content="Li Jiahui">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="源码分析">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://hjhl.github.io/2023/03/26/android-startup-source-code-analysis/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hjhl.github.io/2023/03/26/android-startup-source-code-analysis/","path":"2023/03/26/android-startup-source-code-analysis/","title":"Android Startup 使用和源码分析"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android Startup 使用和源码分析 | XX的记事本</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?2256ac363bc50a457e9e587fad9771f2"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XX的记事本</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">明德砺志，求知笃行</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%88%9D%E8%A7%81"><span class="nav-number">1.</span> <span class="nav-text">一、初见</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BC%98%E7%82%B9-%E7%BC%BA%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">二、优点 &amp; 缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">3.</span> <span class="nav-text">三、源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%84%9F%E6%83%B3"><span class="nav-number">4.</span> <span class="nav-text">四、感想</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Li Jiahui</p>
+  <div class="site-description" itemprop="description">记录我学习，生活与工作的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hjhl.github.io/2023/03/26/android-startup-source-code-analysis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Li Jiahui">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XX的记事本">
+      <meta itemprop="description" content="记录我学习，生活与工作的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android Startup 使用和源码分析 | XX的记事本">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android Startup 使用和源码分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-03-26 20:04:04" itemprop="dateCreated datePublished" datetime="2023-03-26T20:04:04+00:00">2023-03-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-03 12:09:57" itemprop="dateModified" datetime="2025-01-03T12:09:57+00:00">2025-01-03</time>
+    </span>
+
+  
+    <span id="/2023/03/26/android-startup-source-code-analysis/" class="post-meta-item leancloud_visitors" data-flag-title="Android Startup 使用和源码分析" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://developer.android.com/topic/libraries/app-startup">Startup</a>是 Jetpack 中用于解决应用程序启动时任务初始化的一个组件。</p>
+<span id="more"></span>
+
+<p>组件源码地址：<a target="_blank" rel="noopener" href="https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:startup/">https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:startup/</a></p>
+<h2 id="一、初见"><a href="#一、初见" class="headerlink" title="一、初见"></a>一、初见</h2><p>从介绍看，它依靠 <code>ContentProvider</code> 完成了无侵入式组件初始化。所谓无侵入式，是指它不需要使用者通过手动方式调用进行初始化，而是依赖系统对四大组件之一 <code>ContentProvider</code> 的调用，间接对初始化内容进行调用。</p>
+<p>看个使用例子。</p>
+<p>通常项目中会有一个 Log 库，它一般不依赖其他任何业务组件，并且初始化的时机要尽可能前。</p>
+<p>一般是这么初始化：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">App</span> : <span class="type">Application</span>() &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate()</span><br><span class="line">        <span class="comment">// Log 库初始化</span></span><br><span class="line">        Logger.<span class="keyword">init</span>(<span class="keyword">this</span>)</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而通过 Startup 库，则是这么做：</p>
+<ol>
+<li>定义一个 <code>LoggerInitializer</code>，继承自 <code>Initializer</code></li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.hjhl.app.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoggerInitializer</span> : <span class="type">Initializer</span>&lt;<span class="type">Logger</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(context: <span class="type">Context</span>)</span></span>: Logger &#123;</span><br><span class="line">        Logger.<span class="keyword">init</span>(context)</span><br><span class="line">        <span class="keyword">return</span> Logger</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dependencies</span><span class="params">()</span></span>: List&lt;Class&lt;<span class="keyword">out</span> Initializer&lt;*&gt;&gt;&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> emptyList();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>在 <code>AndroidManifest.xml</code> 声明一个特定名称的 <code>ContentProvider</code></li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">provider</span>&gt;</span></span><br><span class="line">    android:name=&quot;androidx.startup.InitializationProvider&quot;</span><br><span class="line">    android:authorities=&quot;$&#123;applicationId&#125;.androidx-startup&quot;</span><br><span class="line">    android:exported=&quot;false&quot;</span><br><span class="line">    tools:node=&quot;merge&quot;&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">&quot;me.hjhl.app.demo.LoggerInitializer&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:value</span>=<span class="string">&quot;androidx.startup&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">provider</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，就以 Startup 库的方式完成了 Log 组件的初始化。</p>
+<p>乍一看，挺麻烦的，比前一种方式的代码要多得多，还引入了一个 <code>ContentProvider</code>，会带来性能上的损失。那它的优点在哪里？</p>
+<h2 id="二、优点-缺点"><a href="#二、优点-缺点" class="headerlink" title="二、优点 &amp; 缺点"></a>二、优点 &amp; 缺点</h2><p>项目中接过新组件的同学应该遇到过：组件 A 初始化依赖组件 B 提供信息，因此组件 A 必须在组件 B 初始化完成后，才能进行初始化工作。在中大型项目中，组件多，这种依赖关系会很复杂，一不留神就容易引起错误。</p>
+<p>Startup 就是给我们解决这个问题的——它可以初始化组件，并完成该组件所依赖组件的初始化。</p>
+<p>假设我们有一个 AB 实验组件，一个网络组件。显然，AB 组件依赖网络组件完成后，才能正常使用其功能。</p>
+<p>借助 Startup，可以这么实现：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.hjhl.app.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NetworkInitializer</span> : <span class="type">Initializer</span>&lt;<span class="type">NetworkManager</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(context: <span class="type">Context</span>)</span></span>: NetworkManager &#123;</span><br><span class="line">        <span class="keyword">val</span> configuration = NetworkInitParamsBuilder</span><br><span class="line">                                .setUrl(<span class="string">&quot;https://xxx.xxx.xxx&quot;</span>)</span><br><span class="line">                                .build()</span><br><span class="line">        NetworkManager.<span class="keyword">init</span>(configuration)</span><br><span class="line">        <span class="keyword">return</span> NetworkManager</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dependencies</span><span class="params">()</span></span>: List&lt;Class&lt;<span class="keyword">out</span> Initializer&lt;*&gt;&gt;&gt; &#123;</span><br><span class="line">        <span class="comment">// 网络组件依赖 Log 组件</span></span><br><span class="line">        <span class="keyword">return</span> listOf(Logger::<span class="keyword">class</span>.java)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> me.hjhl.app.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AbTestInitializer</span> : <span class="type">Initializer</span>&lt;<span class="type">AbTestManager</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">create</span><span class="params">(context: <span class="type">Context</span>)</span></span>: AbTestManager &#123;</span><br><span class="line">        <span class="keyword">val</span> configuration = AbTestManagerInitParamsBuilder</span><br><span class="line">                                .setUrl(<span class="string">&quot;https://xxx.xxx.xxx&quot;</span>)</span><br><span class="line">                                .setNetwork &#123; url -&gt;</span><br><span class="line">                                    <span class="keyword">return</span> NetworkManager.postSync(url)</span><br><span class="line">                                &#125;</span><br><span class="line">                                .build()</span><br><span class="line">        AbTestManager.<span class="keyword">init</span>(configuration)</span><br><span class="line">        <span class="keyword">return</span> AbTestManager</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dependencies</span><span class="params">()</span></span>: List&lt;Class&lt;<span class="keyword">out</span> Initializer&lt;*&gt;&gt;&gt; &#123;</span><br><span class="line">        <span class="keyword">return</span> listOf(NetworkInitializer::<span class="keyword">class</span>.java)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">provider</span>&gt;</span></span><br><span class="line">    android:name=&quot;androidx.startup.InitializationProvider&quot;</span><br><span class="line">    android:authorities=&quot;$&#123;applicationId&#125;.androidx-startup&quot;</span><br><span class="line">    android:exported=&quot;false&quot;</span><br><span class="line">    tools:node=&quot;merge&quot;&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">&quot;me.hjhl.app.demo.AbTestInitializer&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:value</span>=<span class="string">&quot;androidx.startup&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">provider</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Startup 的缺点也很明显：除了新增一个 <code>ContentProvider</code> 增加耗时外，还要求组件初始化必须同步（或者通过异步转同步）完成。</p>
+<h2 id="三、源码分析"><a href="#三、源码分析" class="headerlink" title="三、源码分析"></a>三、源码分析</h2><p>首先，看下新增的 <code>ContentProvider</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// file: startup/startup-runtime/src/main/java/androidx/startup/InitializationProvider.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InitializationProvider</span> <span class="keyword">extends</span> <span class="title class_">ContentProvider</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">final</span> <span class="type">boolean</span> <span class="title function_">onCreate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Context</span> <span class="variable">context</span> <span class="operator">=</span> getContext();</span><br><span class="line">        <span class="keyword">if</span> (context != <span class="literal">null</span>) &#123;</span><br><span class="line">            Context = applicationContext = context.getApplicationContext();</span><br><span class="line">            <span class="keyword">if</span> (applicationContext != <span class="literal">null</span>) &#123;</span><br><span class="line">                AppInitializer.getInstance(context).discoverAndInitialize(getClass());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                StartupLogger.w(<span class="string">&quot;Deferring initialization because `applicationContext` is null.&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">StartupException</span>(<span class="string">&quot;Context cannot be null&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里关键是调用 <code>AppInitializer</code>，完成后续的整个初始化链。</p>
+<p>那来看下 <code>AppInitializer</code>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// file: startup/startup-runtime/src/main/java/androidx/startup/AppInitializer.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">AppInitializer</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 单例模式，延迟初始化</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> static AppInitializer getInstance(<span class="meta">@NonNull</span> Context context) &#123;</span><br><span class="line">        <span class="keyword">if</span> (sInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">            synchronized (sLock) &#123;</span><br><span class="line">                <span class="keyword">if</span> (sInstance == <span class="literal">null</span>) &#123;</span><br><span class="line">                    sInstance = new AppInitializer(context);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sInstance;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void discoverAndInitialize(</span><br><span class="line">        <span class="meta">@NonNull</span> Class&lt;? extends InitializationProvider&gt; initializationProvider</span><br><span class="line">    ) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Trace.beginSection(SECTION_NAME);</span><br><span class="line">            <span class="comment">// 获取 provider 的 meta data</span></span><br><span class="line">            ComponentName provider = new ComponentName(mContext, initializationProvider);</span><br><span class="line">            ProviderInfo providerInfo = mContext.getPackageManager()</span><br><span class="line">                    .getProviderInfo(provider, GET_META_DATA);</span><br><span class="line">            Bundle metadata = providerInfo.metaData;</span><br><span class="line">            <span class="comment">// 进行真正的初始化</span></span><br><span class="line">            discoverAndInitialize(metadata);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException exception) &#123;</span><br><span class="line">            <span class="keyword">throw</span> new StartupException(exception);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            Trace.endSection();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void discoverAndInitialize(<span class="meta">@Nullable</span> Bundle metadata) &#123;</span><br><span class="line">        String startup = mContext.getString(R.string.androidx_startup);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (metadata != <span class="literal">null</span>) &#123;</span><br><span class="line">                Set&lt;Class&lt;?&gt;&gt; initializing = new HashSet&lt;&gt;();</span><br><span class="line">                Set&lt;String&gt; keys = metadata.keySet();</span><br><span class="line">                <span class="comment">// 遍历所有 metadata，注意：key 是各个 Initializer 类的全名</span></span><br><span class="line">                <span class="keyword">for</span> (String key : keys) &#123;</span><br><span class="line">                    <span class="comment">// 只有 value 满足的 Initializer 才进行初始化</span></span><br><span class="line">                    String value = metadata.getString(key, <span class="literal">null</span>);</span><br><span class="line">                    <span class="keyword">if</span> (startup.equals(value)) &#123;</span><br><span class="line">                        Class&lt;?&gt; clazz = Class.forName(key);</span><br><span class="line">                        <span class="comment">// 检查 key 所表示的类是不是继承自 Initializer</span></span><br><span class="line">                        <span class="keyword">if</span> (Initializer.<span class="keyword">class</span>.isAssignableFrom(clazz)) &#123;</span><br><span class="line">                            Class&lt;? extends Initializer&lt;?&gt;&gt; component =</span><br><span class="line">                                    (Class&lt;? extends Initializer&lt;?&gt;&gt;) clazz;</span><br><span class="line">                            <span class="comment">// 满足所有条件，添加到已发现的列表中</span></span><br><span class="line">                            mDiscovered.add(component);</span><br><span class="line">                            <span class="keyword">if</span> (StartupLogger.DEBUG) &#123;</span><br><span class="line">                                StartupLogger.i(String.format(<span class="string">&quot;Discovered %s&quot;</span>, key));</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// Initialize only after discovery is complete. This way, the check for</span></span><br><span class="line">                <span class="comment">// isEagerlyInitialized is correct.</span></span><br><span class="line">                <span class="comment">// meta data 中的 Initializer 发现完毕，开始对齐初始化</span></span><br><span class="line">                <span class="keyword">for</span> (Class&lt;? extends Initializer&lt;?&gt;&gt; component : mDiscovered) &#123;</span><br><span class="line">                    doInitialize(component, initializing);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException exception) &#123;</span><br><span class="line">            <span class="keyword">throw</span> new StartupException(exception);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> &lt;T&gt; T doInitialize(</span><br><span class="line">            <span class="meta">@NonNull</span> Class&lt;? extends Initializer&lt;?&gt;&gt; component,</span><br><span class="line">            <span class="meta">@NonNull</span> Set&lt;Class&lt;?&gt;&gt; initializing) &#123;</span><br><span class="line">        boolean isTracingEnabled = Trace.isEnabled();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (isTracingEnabled) &#123;</span><br><span class="line">                <span class="comment">// Use the simpleName here because section names would get too big otherwise.</span></span><br><span class="line">                Trace.beginSection(component.getSimpleName());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 检查之前是否初始化过，注意：是指从本次调用最开始的时刻开始</span></span><br><span class="line">            <span class="keyword">if</span> (initializing.contains(component)) &#123;</span><br><span class="line">                String message = String.format(</span><br><span class="line">                        <span class="string">&quot;Cannot initialize %s. Cycle detected.&quot;</span>, component.getName()</span><br><span class="line">                );</span><br><span class="line">                <span class="keyword">throw</span> new IllegalStateException(message);</span><br><span class="line">            &#125;</span><br><span class="line">            Object result;</span><br><span class="line">            <span class="keyword">if</span> (!mInitialized.containsKey(component)) &#123;</span><br><span class="line">                initializing.add(component);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">// 获取 Initializer 实例</span></span><br><span class="line">                    Object instance = component.getDeclaredConstructor().newInstance();</span><br><span class="line">                    Initializer&lt;?&gt; initializer = (Initializer&lt;?&gt;) instance;</span><br><span class="line">                    <span class="comment">// 收集依赖信息</span></span><br><span class="line">                    List&lt;Class&lt;? extends Initializer&lt;?&gt;&gt;&gt; dependencies =</span><br><span class="line">                            initializer.dependencies();</span><br><span class="line"></span><br><span class="line">                    <span class="comment">// 如果存在依赖，遍历依赖，检查是否初始化过（进程周期内）</span></span><br><span class="line">                    <span class="comment">// 如果依赖没有初始化，则递归调用完成依赖的初始化</span></span><br><span class="line">                    <span class="keyword">if</span> (!dependencies.isEmpty()) &#123;</span><br><span class="line">                        <span class="keyword">for</span> (Class&lt;? extends Initializer&lt;?&gt;&gt; clazz : dependencies) &#123;</span><br><span class="line">                            <span class="keyword">if</span> (!mInitialized.containsKey(clazz)) &#123;</span><br><span class="line">                                doInitialize(clazz, initializing);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span> (StartupLogger.DEBUG) &#123;</span><br><span class="line">                        StartupLogger.i(String.format(<span class="string">&quot;Initializing %s&quot;</span>, component.getName()));</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 这里，所有依赖都满足了，可以对 Initializer 进行初始化</span></span><br><span class="line">                    result = initializer.create(mContext);</span><br><span class="line">                    <span class="keyword">if</span> (StartupLogger.DEBUG) &#123;</span><br><span class="line">                        StartupLogger.i(String.format(<span class="string">&quot;Initialized %s&quot;</span>, component.getName()));</span><br><span class="line">                    &#125;</span><br><span class="line">                    initializing.remove(component);</span><br><span class="line">                    mInitialized.put(component, result);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> new StartupException(throwable);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                result = mInitialized.<span class="keyword">get</span>(component);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> (T) result;</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            Trace.endSection();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、感想"><a href="#四、感想" class="headerlink" title="四、感想"></a>四、感想</h2><p>Q：如果希望使用这套依赖发现机制，又不想引入 <code>ContentProvidr</code>，该如何办？<br>A：简单，将 <code>provider</code> 标记 <code>tools:node=&quot;remove&quot;</code>，然后在代码恰当的位置，调用 <code>AppInitializer.getInstance(context).initializeComponent(YourInitializer::class.java)</code>。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag"># 源码分析</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/12/25/view-binding-missing-required-view-with-id/" rel="prev" title="View Binding 遇到 `Missing required view with ID`">
+                  <i class="fa fa-angle-left"></i> View Binding 遇到 `Missing required view with ID`
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments"><div id="twikoo-comments"></div></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Li Jiahui</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">14k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">50 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"KPdKpT6fYBrDy8Fe3CXwldqH-gzGzoHsz","app_key":"WyKTvJaO7JzlUeDMhyUq1yge","server_url":"https://kpdkpt6f.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+<script class="next-config" data-name="twikoo" type="application/json">{"enable":true,"visitor":false,"envId":"https://twitoo-mzzx09z7d-chenyusheng-ljhaccn.vercel.app/","el":"#twikoo-comments"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.twikoo.el)
+    .then(() => NexT.utils.getScript(
+      CONFIG.twikoo.jsUrl || 'https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js',
+      { condition: window.twikoo }
+    ))
+    .then(() => {
+      twikoo.init(CONFIG.twikoo);
+    });
+});
+</script>
+<style>
+.post-block, .comments {
+  overflow: visible;
+}
+.tk-owo-emotion {
+  display: inline-block;
+}
+</style>
+
+</body>
+</html>

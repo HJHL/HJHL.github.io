@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="cmIDbBro-pTmxbgiOrH3CMGcqhIBvJjQlqYvHkTM9aw">
+  <meta name="baidu-site-verification" content="code-i4bacjL2gC">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hjhl.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Room是Jetpack的成员之一，是一个数据持久化的组件，作用跟SQLite类似，但提供了更易于使用、便捷开发的编程逻辑。 本文将通过以下codelabs学习和使用Room。  Introduction to Room and Flow Persist data with Room Android Kotlin Fundamentals: Create a Room Database Andro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「Android Codelabs」 使用Room">
+<meta property="og:url" content="https://hjhl.github.io/2021/10/17/android-codelab-using-room/index.html">
+<meta property="og:site_name" content="XX的记事本">
+<meta property="og:description" content="Room是Jetpack的成员之一，是一个数据持久化的组件，作用跟SQLite类似，但提供了更易于使用、便捷开发的编程逻辑。 本文将通过以下codelabs学习和使用Room。  Introduction to Room and Flow Persist data with Room Android Kotlin Fundamentals: Create a Room Database Andro">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://developer.android.google.cn/images/training/data-storage/room_architecture.png">
+<meta property="article:published_time" content="2021-10-17T01:00:31.000Z">
+<meta property="article:modified_time" content="2025-01-03T12:09:57.675Z">
+<meta property="article:author" content="Li Jiahui">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="数据持久化">
+<meta property="article:tag" content="Jetpack">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://developer.android.google.cn/images/training/data-storage/room_architecture.png">
+
+
+<link rel="canonical" href="https://hjhl.github.io/2021/10/17/android-codelab-using-room/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hjhl.github.io/2021/10/17/android-codelab-using-room/","path":"2021/10/17/android-codelab-using-room/","title":"「Android Codelabs」 使用Room"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>「Android Codelabs」 使用Room | XX的记事本</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?2256ac363bc50a457e9e587fad9771f2"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XX的记事本</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">明德砺志，求知笃行</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">整体背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">使用步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">3.</span> <span class="nav-text">最佳实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Repository%E4%B8%AD%E9%97%B4%E5%B1%82"><span class="nav-number">3.1.</span> <span class="nav-text">使用Repository中间层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">实例</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Li Jiahui</p>
+  <div class="site-description" itemprop="description">记录我学习，生活与工作的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hjhl.github.io/2021/10/17/android-codelab-using-room/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Li Jiahui">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XX的记事本">
+      <meta itemprop="description" content="记录我学习，生活与工作的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="「Android Codelabs」 使用Room | XX的记事本">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「Android Codelabs」 使用Room
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-17 01:00:31" itemprop="dateCreated datePublished" datetime="2021-10-17T01:00:31+00:00">2021-10-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-03 12:09:57" itemprop="dateModified" datetime="2025-01-03T12:09:57+00:00">2025-01-03</time>
+    </span>
+
+  
+    <span id="/2021/10/17/android-codelab-using-room/" class="post-meta-item leancloud_visitors" data-flag-title="「Android Codelabs」 使用Room" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p><a target="_blank" rel="noopener" href="https://developer.android.com/jetpack/androidx/releases/room">Room</a>是<a target="_blank" rel="noopener" href="https://developer.android.com/jetpack">Jetpack</a>的成员之一，是一个数据持久化的组件，作用跟<code>SQLite</code>类似，但提供了更易于使用、便捷开发的编程逻辑。</p>
+<p>本文将通过以下codelabs学习和使用Room。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/codelabs/basic-android-kotlin-training-intro-room-flow">Introduction to Room and Flow</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/codelabs/basic-android-kotlin-training-persisting-data-room">Persist data with Room</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/codelabs/kotlin-android-training-room-database">Android Kotlin Fundamentals: Create a Room Database</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/codelabs/android-room-with-a-view-kotlin">Android Room with a View - Kotlin</a></li>
+</ul>
+<p>本文不实际探讨关于Room的深入原理。</p>
+<span id="more"></span>
+
+<h2 id="整体背景"><a href="#整体背景" class="headerlink" title="整体背景"></a>整体背景</h2><p>使用Room的整体结构参照下图：</p>
+<p><img src="https://developer.android.google.cn/images/training/data-storage/room_architecture.png" alt="Room arch"></p>
+<p>从图中看到，应用通过Database获取到DAO示例；通过DAO与数据库进行交互，如CRUD。可以看出，对App来说，比较重要的应该就是这个DAO。</p>
+<p>那Entities是什么呢？可以理解成是对象。一个对象对应着数据库中的一条数据。</p>
+<h2 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h2><p>总结下Room的使用步骤：</p>
+<ol>
+<li>抽象对象，设计对应的Entity类。一般用<code>data class</code>。</li>
+<li>定义DAO类，定义数据库与App交互的接口。一般用<code>interface</code>。</li>
+<li>定义Database类，继承自<code>RoomDatabase</code>，主要用于提供DAO对象。一般用<code>abstract class</code>。</li>
+</ol>
+<p>这就是使用Room的最小步骤了。但在项目中使用，肯定是不满足仅仅如此的，通常我们还需要一个“最佳实践”。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><h3 id="使用Repository中间层"><a href="#使用Repository中间层" class="headerlink" title="使用Repository中间层"></a>使用<code>Repository</code>中间层</h3><p>在实际的项目中，通常会使用一个<code>Repository</code>来作为App与Database中间的桥梁。</p>
+<p>考虑以下场景：当需要访问xxx资源时，预期是如果数据被未拉取到本地，或者是远端存在更新，那么希望从远端获取数据并保存到本地。如果本地存在数据，且已是最新，则直接返回。</p>
+<p>很容易想到的方法是在业务代码中直接实现，不过完全可以把这部分封装在获取数据的类中。这样业务方调用就很清晰明了了。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>这里保存书籍信息为例，实例介绍Room的使用。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 先抽象对象，定义Entity</span></span><br><span class="line"><span class="comment">// 假设我们需要访问书籍对象，获取它的书名、作者、页数、价格信息</span></span><br><span class="line"><span class="comment">// file: Book.kt</span></span><br><span class="line"><span class="meta">@Entity(tableName = <span class="string">&quot;book&quot;</span>)</span> <span class="comment">// 数据库中的表名</span></span><br><span class="line"><span class="keyword">data</span> <span class="keyword">class</span> <span class="title class_">Book</span>(</span><br><span class="line">    <span class="meta">@PrimaryKey</span> <span class="meta">@ColumnInfo(name = <span class="string">&quot;name&quot;</span>)</span> <span class="keyword">val</span> name: String, <span class="comment">// 定义主键，在数据库中的名字为name，类型为String</span></span><br><span class="line">    <span class="meta">@ColumnInfo(name = <span class="string">&quot;author&quot;</span>)</span> <span class="keyword">val</span> author: String, <span class="comment">// 定义一个键，名为author</span></span><br><span class="line">    <span class="meta">@ColumnInfo(name = <span class="string">&quot;pages&quot;</span>)</span> <span class="keyword">val</span> pages: <span class="built_in">Int</span>,</span><br><span class="line">    <span class="meta">@ColumnInfo(name = <span class="string">&quot;price&quot;</span>)</span> <span class="keyword">val</span> price: <span class="built_in">Double</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 定义DAO，定义业务与数据库交互的操作</span></span><br><span class="line"><span class="comment">// file: BookDao.kt</span></span><br><span class="line"><span class="meta">@Dao</span></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">BookDao</span> &#123;</span><br><span class="line">    <span class="meta">@Query(<span class="string">&quot;SELECT * FROM book&quot;</span>)</span> <span class="comment">// 这里是用到的SQL语句</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">getAllBooks</span><span class="params">()</span></span>: Flow&lt;List&lt;Book&gt;&gt; <span class="comment">// 获取数据库中的所有书，异步操作，是用来了Kotlin Flow</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Insert(onConflict = OnConflictStrategy.IGNORE)</span></span><br><span class="line">    <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">insertBook</span><span class="params">(<span class="keyword">vararg</span> book: <span class="type">Book</span>)</span></span> <span class="comment">// 插入书籍，Room自动完成book到数据库条目的转换。onConflict定义了当遇到相同条目时的处理策略</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Query(<span class="string">&quot;DELETE FROM book&quot;</span>)</span></span><br><span class="line">    <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">deleteAll</span><span class="params">()</span></span> <span class="comment">// 删除所有书籍</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 定义Database</span></span><br><span class="line"><span class="comment">// file：BookRoomDatabase.kt</span></span><br><span class="line"><span class="meta">@Database(entities = [Book::class], version = 1, exportSchema = false)</span></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">BookRoomDatabase</span> : <span class="type">RoomDatabase</span>() &#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">bookDao</span><span class="params">()</span></span>: BookDao</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="meta">@Volatile</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">var</span> INSTANCE: BookRoomDatabase? = <span class="literal">null</span></span><br><span class="line">        <span class="comment">// 返回单例数据库实例</span></span><br><span class="line">        <span class="comment">// 通常，创建一个新的数据库的开销较大，并且毫无必要创建多个数据库实例。</span></span><br><span class="line">        <span class="comment">// 所以在使用时，最好定义一个接口，仅创建一次。</span></span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">getDatabase</span><span class="params">(context: <span class="type">Context</span>, scope: <span class="type">CoroutineScope</span>)</span></span>: BookRoomDatabase &#123;</span><br><span class="line">            <span class="keyword">return</span> INSTANCE ?: synchronized(<span class="keyword">this</span>) &#123;</span><br><span class="line">                <span class="keyword">val</span> instance = Room.databaseBuilder(</span><br><span class="line">                    context.applicationContext,</span><br><span class="line">                    BookRoomDatabase::<span class="keyword">class</span>.java,</span><br><span class="line">                    <span class="string">&quot;book_database&quot;</span> <span class="comment">// 数据库的名字</span></span><br><span class="line">                ).build()</span><br><span class="line">                INSTANCE = instance</span><br><span class="line">                instance</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. [optional] 定义Repository类（存储库）</span></span><br><span class="line"><span class="comment">// Repository通常以DAO作为其构造参数，在业务实际操作数据的过程中，</span></span><br><span class="line"><span class="comment">// 应通过它提供的接口访问数据（底层对象不一定是数据库，还可以是网络资源）</span></span><br><span class="line"><span class="comment">// file：BookRepository.kt</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BookRepository</span>(<span class="keyword">private</span> <span class="keyword">val</span> bookDao: BookDao) &#123;</span><br><span class="line">    <span class="keyword">val</span> allBooks: Flow&lt;List&lt;Book&gt;&gt; = bookDao.getAllBooks()</span><br><span class="line"></span><br><span class="line">    <span class="meta">@WorkerThread</span></span><br><span class="line">    <span class="keyword">suspend</span> <span class="function"><span class="keyword">fun</span> <span class="title">insert</span><span class="params">(book: <span class="type">Book</span>)</span></span> &#123;</span><br><span class="line">        bookDao.insertBook(book)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> TAG = <span class="string">&quot;BookRepository&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如何使用</span></span><br><span class="line"><span class="comment">// 数据库通常仅用单例，可以在Application或者单例类中懒加载创建其实例。</span></span><br><span class="line"><span class="comment">// file：MyApplication.kt</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyApplication</span>: <span class="type">Application</span>() &#123;</span><br><span class="line">    <span class="comment">// 数据库实例</span></span><br><span class="line">    <span class="keyword">val</span> bookDb: BookRoomDatabase <span class="keyword">by</span> lazy &#123;</span><br><span class="line">        BookRoomDatabase.getDatabase(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 存储库实例</span></span><br><span class="line">    <span class="keyword">val</span> bookRepository: BookRepository <span class="keyword">by</span> lazy &#123;</span><br><span class="line">        BookRepository(bookDb.bookDao())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在MainActivity中，结合ViewModel使用</span></span><br><span class="line"><span class="comment">// 先定义ViewModel</span></span><br><span class="line"><span class="comment">// file：BookViewModel.kt</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BookViewModel</span>(<span class="keyword">private</span> <span class="keyword">val</span> repository: BookRepository): ViewModel() &#123;</span><br><span class="line">    <span class="keyword">val</span> allBooks: LiveData&lt;List&lt;Book&gt;&gt; = repository.allBooks.asLiveData()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">insert</span><span class="params">(book: <span class="type">Book</span>)</span></span> = viewModelScope.launch &#123;</span><br><span class="line">        repository.insert(book)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">val</span> TAG = <span class="string">&quot;BookViewModel&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用ViewModelProvider提供的Factory来创建ViewModel实例，</span></span><br><span class="line">    <span class="comment">// 避免ViewModel在Activity的生命周期中被重复创建</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">BookViewModelFactory</span>(<span class="keyword">private</span> <span class="keyword">val</span> repository: BookRepository): ViewModelProvider.Factory &#123;</span><br><span class="line">        <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="type">&lt;T : ViewModel?&gt;</span> <span class="title">create</span><span class="params">(modelClass: <span class="type">Class</span>&lt;<span class="type">T</span>&gt;)</span></span>: T &#123;</span><br><span class="line">            <span class="keyword">if</span> (modelClass.isAssignableFrom(BookViewModel::<span class="keyword">class</span>.java)) &#123;</span><br><span class="line">                <span class="keyword">return</span> BookViewModel(repository) <span class="keyword">as</span> T</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">throw</span> IllegalArgumentException(<span class="string">&quot;Unknown view model class&quot;</span>)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MainActivity</span>: <span class="type">AppCompatActivity</span>() &#123;</span><br><span class="line">    <span class="comment">// 注意：必须使用viewModels方式创建ViewModel实例，否则会出问题，无法从数据库读or写数据</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> mBookViewModel: BookViewModel <span class="keyword">by</span> viewModels &#123;</span><br><span class="line">        BookViewModelFactory((application <span class="keyword">as</span> MyApplication).bookRepository)</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreate</span><span class="params">(savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onCreate(savedInstanceState)</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        <span class="comment">// 当数据有变化，并且Activity位于前台时，将会收到Callback</span></span><br><span class="line">        mBookViewModel.allBooks.observe(<span class="keyword">this</span>, Observer &#123; books -&gt;</span><br><span class="line">            books?.let &#123;</span><br><span class="line">                it.forEach &#123; book -&gt;</span><br><span class="line">                    Log.d(TAG, <span class="string">&quot;<span class="variable">$book</span>&quot;</span>)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96/" rel="tag"># 数据持久化</a>
+              <a href="/tags/Jetpack/" rel="tag"># Jetpack</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/10/16/baofeng-uv5r-open-box-quickly/" rel="prev" title="宝锋UV-5R快速开箱">
+                  <i class="fa fa-angle-left"></i> 宝锋UV-5R快速开箱
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/10/17/temp-files-when-using-sqlite/" rel="next" title="使用SQLite/Room时产生的中间文件是什么">
+                  使用SQLite/Room时产生的中间文件是什么 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments"><div id="twikoo-comments"></div></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Li Jiahui</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">14k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">50 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"KPdKpT6fYBrDy8Fe3CXwldqH-gzGzoHsz","app_key":"WyKTvJaO7JzlUeDMhyUq1yge","server_url":"https://kpdkpt6f.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+<script class="next-config" data-name="twikoo" type="application/json">{"enable":true,"visitor":false,"envId":"https://twitoo-mzzx09z7d-chenyusheng-ljhaccn.vercel.app/","el":"#twikoo-comments"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.twikoo.el)
+    .then(() => NexT.utils.getScript(
+      CONFIG.twikoo.jsUrl || 'https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js',
+      { condition: window.twikoo }
+    ))
+    .then(() => {
+      twikoo.init(CONFIG.twikoo);
+    });
+});
+</script>
+<style>
+.post-block, .comments {
+  overflow: visible;
+}
+.tk-owo-emotion {
+  display: inline-block;
+}
+</style>
+
+</body>
+</html>

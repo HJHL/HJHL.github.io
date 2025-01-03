@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/index.html</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/17/activity-launchMode-in-AndroidManifest/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/17/android-codelab-using-room/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2023/03/26/android-startup-source-code-analysis/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/11/08/android-use-view-binding/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/16/baofeng-uv5r-open-box-quickly/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/11/14/build-and-debug-webrtc-using-docker/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/09/12/build-hexo-blog-on-github-pages/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/11/21/download-bing-pictures-of-the-day/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/27/ham-cert/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/12/19/fragment-requireContext-throw-not-attached-to-a-context/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/23/ham-phrase-concept-intro/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/01/record-some-hamradio-website/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/10/17/temp-files-when-using-sqlite/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/12/05/type-convertation-in-cpp/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/2021/12/25/view-binding-missing-required-view-with-id/</loc>
+    
+    <lastmod>2025-01-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://hjhl.github.io/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Android/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Jetpack/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/UI/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/WebRTC/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Kotlin/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Toys/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/%E4%B8%9A%E4%BD%99%E6%97%A0%E7%BA%BF%E7%94%B5/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Ham/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Bug/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/SQLite/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/Room/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://hjhl.github.io/tags/C/</loc>
+    <lastmod>2025-01-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+</urlset>

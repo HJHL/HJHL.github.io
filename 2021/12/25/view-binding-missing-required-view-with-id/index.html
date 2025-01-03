@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="cmIDbBro-pTmxbgiOrH3CMGcqhIBvJjQlqYvHkTM9aw">
+  <meta name="baidu-site-verification" content="code-i4bacjL2gC">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/all.min.css" integrity="sha256-5eIC48iZUHmSlSUz9XtjRyK2mzQkHScZY1WdMaoz74E=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"hjhl.github.io","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.21.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="今天使用 ViewBinding 时遇到一个 Crash：java.lang.NullPointerException: Missing required view with ID，最终发现是与自定义 View 有关系……">
+<meta property="og:type" content="article">
+<meta property="og:title" content="View Binding 遇到 &#96;Missing required view with ID&#96;">
+<meta property="og:url" content="https://hjhl.github.io/2021/12/25/view-binding-missing-required-view-with-id/index.html">
+<meta property="og:site_name" content="XX的记事本">
+<meta property="og:description" content="今天使用 ViewBinding 时遇到一个 Crash：java.lang.NullPointerException: Missing required view with ID，最终发现是与自定义 View 有关系……">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hjhl.github.io/images/app-run-success.png">
+<meta property="article:published_time" content="2021-12-25T21:31:25.000Z">
+<meta property="article:modified_time" content="2025-01-03T12:09:57.675Z">
+<meta property="article:author" content="Li Jiahui">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hjhl.github.io/images/app-run-success.png">
+
+
+<link rel="canonical" href="https://hjhl.github.io/2021/12/25/view-binding-missing-required-view-with-id/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://hjhl.github.io/2021/12/25/view-binding-missing-required-view-with-id/","path":"2021/12/25/view-binding-missing-required-view-with-id/","title":"View Binding 遇到 `Missing required view with ID`"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>View Binding 遇到 `Missing required view with ID` | XX的记事本</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?2256ac363bc50a457e9e587fad9771f2"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">XX的记事本</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">明德砺志，求知笃行</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">一、背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%88%86%E6%9E%90%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">二、分析过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%89%BE%E5%88%B0-ViewBinding-%E7%94%9F%E6%88%90%E7%9A%84-UI-%E7%B1%BB"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 找到 ViewBinding 生成的 UI 类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%88%86%E6%9E%90%E5%85%B3%E9%94%AE%E4%BB%A3%E7%A0%81"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 分析关键代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-%E6%80%80%E7%96%91%E7%82%B91%EF%BC%9A%E4%B8%8E-ViewBinding-%E4%B8%8D%E6%94%AF%E6%8C%81%E5%B8%83%E5%B1%80%E4%B8%AD%E6%9C%89%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84-View-%E6%8E%A7%E4%BB%B6%E6%9C%89%E5%85%B3%EF%BC%9F"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 怀疑点1：与 ViewBinding 不支持布局中有自定义的 View 控件有关？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%8F%91%E7%8E%B0%E9%97%AE%E9%A2%98"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 发现问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%8E%A2%E7%A9%B6%E5%8E%9F%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">三、探究原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-AttributeSet-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 AttributeSet 是什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%BB%93%E6%9D%9F%E8%AF%AD"><span class="nav-number">4.</span> <span class="nav-text">四、结束语</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Li Jiahui</p>
+  <div class="site-description" itemprop="description">记录我学习，生活与工作的地方</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://hjhl.github.io/2021/12/25/view-binding-missing-required-view-with-id/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Li Jiahui">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XX的记事本">
+      <meta itemprop="description" content="记录我学习，生活与工作的地方">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="View Binding 遇到 `Missing required view with ID` | XX的记事本">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          View Binding 遇到 `Missing required view with ID`
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-12-25 21:31:25" itemprop="dateCreated datePublished" datetime="2021-12-25T21:31:25+00:00">2021-12-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-01-03 12:09:57" itemprop="dateModified" datetime="2025-01-03T12:09:57+00:00">2025-01-03</time>
+    </span>
+
+  
+    <span id="/2021/12/25/view-binding-missing-required-view-with-id/" class="post-meta-item leancloud_visitors" data-flag-title="View Binding 遇到 `Missing required view with ID`" title="阅读次数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span class="leancloud-visitors-count"></span>
+    </span>
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>今天使用 ViewBinding 时遇到一个 Crash：<code>java.lang.NullPointerException: Missing required view with ID</code>，最终发现是与<strong>自定义 View</strong> 有关系……</p>
+<span id="more"></span>
+
+<h2 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h2><p>最近使用 <code>ViewBinding</code> 时，遇到这么一个报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">E AndroidRuntime: FATAL EXCEPTION: main</span><br><span class="line">E AndroidRuntime: Process: me.hjhl.app, PID: 10740</span><br><span class="line">E AndroidRuntime: java.lang.NullPointerException: Missing required view with ID: me.hjhl.app:<span class="built_in">id</span>/my_gl_surface_view</span><br><span class="line">E AndroidRuntime: 	at me.hjhl.app.databinding.FragmentGlesDemoBinding.<span class="built_in">bind</span>(FragmentGlesDemoBinding.java:67)</span><br><span class="line">E AndroidRuntime: 	at me.hjhl.app.databinding.FragmentGlesDemoBinding.inflate(FragmentGlesDemoBinding.java:49)</span><br><span class="line">E AndroidRuntime: 	at me.hjhl.app.demo.GLESDemoFragment.onCreateView(GLESDemoFragment.kt:31)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.Fragment.performCreateView(Fragment.java:2995)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentStateManager.createView(FragmentStateManager.java:523)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentStateManager.moveToExpectedState(FragmentStateManager.java:261)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.executeOpsTogether(FragmentManager.java:1840)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.removeRedundantOperationsAndExecute(FragmentManager.java:1764)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.execPendingActions(FragmentManager.java:1701)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.dispatchStateChange(FragmentManager.java:2849)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.dispatchActivityCreated(FragmentManager.java:2784)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentController.dispatchActivityCreated(FragmentController.java:262)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentActivity.onStart(FragmentActivity.java:478)</span><br><span class="line">E AndroidRuntime: 	at androidx.appcompat.app.AppCompatActivity.onStart(AppCompatActivity.java:246)</span><br><span class="line">E AndroidRuntime: 	at android.app.Instrumentation.callActivityOnStart(Instrumentation.java:1433)</span><br><span class="line">E AndroidRuntime: 	at android.app.Activity.performStart(Activity.java:7923)</span><br><span class="line">E AndroidRuntime: 	at android.app.ActivityThread.handleStartActivity(ActivityThread.java:3337)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.performLifecycleSequence(TransactionExecutor.java:221)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.cycleToPath(TransactionExecutor.java:201)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeLifecycleState(TransactionExecutor.java:173)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:97)</span><br><span class="line">E AndroidRuntime: 	at android.app.ActivityThread<span class="variable">$H</span>.handleMessage(ActivityThread.java:2049)</span><br><span class="line">E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:107)</span><br><span class="line">E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:228)</span><br><span class="line">E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:7589)</span><br><span class="line">E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">E AndroidRuntime: 	at com.android.internal.os.RuntimeInit<span class="variable">$MethodAndArgsCaller</span>.run(RuntimeInit.java:539)</span><br><span class="line">E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:953)</span><br></pre></td></tr></table></figure>
+
+<p>整体代码逻辑大致是：<code>Activity</code> 创建时跳转到一个 <code>Fragment</code>，这个 <code>Fragment</code> 对应的 XML 里很简单——<code>FrameLayout</code> 里套了一个自定义 View。错误堆栈提示找不到资源 id <code>my_gl_surface_view</code>。这让我不禁怀疑是不是自定义 View 导致的。</p>
+<h2 id="二、分析过程"><a href="#二、分析过程" class="headerlink" title="二、分析过程"></a>二、分析过程</h2><h3 id="2-1-找到-ViewBinding-生成的-UI-类"><a href="#2-1-找到-ViewBinding-生成的-UI-类" class="headerlink" title="2.1 找到 ViewBinding 生成的 UI 类"></a>2.1 找到 <code>ViewBinding</code> 生成的 UI 类</h3><p>ViewBinding 的大致原理是在编译时，把开启了 ViewBinding 功能的布局资源 XML 生成对应的 Java 类。例如在这个 case 中，对应的类文件位置为：<code>app/build/generated/data_binding_base_class_source_out/debug/out/me/ljh/app/databinding/FragmentGlesDemoBinding.java</code>。</p>
+<h3 id="2-2-分析关键代码"><a href="#2-2-分析关键代码" class="headerlink" title="2.2 分析关键代码"></a>2.2 分析关键代码</h3><p>以下代码片段是从 <code>FragmentGlesDemoBinding</code> 中摘出：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// file: app/build/generated/data_binding_base_class_source_out/debug/out/me/ljh/app/databinding/FragmentGlesDemoBinding.java</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">FragmentGlesDemoBinding</span> <span class="keyword">implements</span> <span class="title class_">ViewBinding</span> &#123;</span><br><span class="line">  <span class="meta">@NonNull</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> FragmentGlesDemoBinding <span class="title function_">bind</span><span class="params">(<span class="meta">@NonNull</span> View rootView)</span> &#123;</span><br><span class="line">  	<span class="comment">// The body of this method is generated in a way you would not otherwise write.</span></span><br><span class="line">    <span class="comment">// This is done to optimize the compiled bytecode for size and performance.</span></span><br><span class="line">    <span class="type">int</span> id;</span><br><span class="line">    missingId: &#123;</span><br><span class="line">    	id = R.id.my_gl_surface_view;</span><br><span class="line">      <span class="type">MyGLSurfaceView</span> <span class="variable">myGlSurfaceView</span> <span class="operator">=</span> ViewBindings.findChildViewById(rootView, id);</span><br><span class="line">      <span class="keyword">if</span> (myGlSurfaceView == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 无法找到 view，则 break 准备抛出异常</span></span><br><span class="line">        <span class="keyword">break</span> missingId;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 递归处理 R.id.my_gl_surface_view 的子 view</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">FragmentGlesDemoBinding</span>((FrameLayout) rootView, myGlSurfaceView);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">String</span> <span class="variable">missingId</span> <span class="operator">=</span> rootView.getResources().getResourceName(id);</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NullPointerException</span>(<span class="string">&quot;Missing required view with ID: &quot;</span>.concat(missingId));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>考虑到该问题跟布局文件密切相关，放上布局文件的源码：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">FrameLayout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:background</span>=<span class="string">&quot;?attr/fullscreenBackgroundColor&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:theme</span>=<span class="string">&quot;@style/ThemeOverlay.LearnAndroidOpenGL.FullscreenContainer&quot;</span></span></span><br><span class="line"><span class="tag">  <span class="attr">tools:context</span>=<span class="string">&quot;.demo.GLESDemoFragment&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">&lt;!-- 这里使用了自定义布局 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">me.ljh.app.widget.MyGLSurfaceView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">&quot;@+id/my_gl_surface_view&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>MyGLSurfaceView</code> 的实现如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyGLSurfaceView</span>(context: Context, attrs: AttributeSet?) : GLSurfaceView(context) &#123;</span><br><span class="line"> 	<span class="comment">// MyGLRender 是继承自 GLSurfaceView.Render 接口的一个类，与这里的报错并无关系</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> renderer: MyGLRender = MyGLRender()</span><br><span class="line"></span><br><span class="line">  <span class="keyword">init</span> &#123;</span><br><span class="line">      setEGLContextClientVersion(<span class="number">3</span>)</span><br><span class="line">      setRenderer(renderer)</span><br><span class="line">      renderMode = RENDERMODE_WHEN_DIRTY</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(context: Context) : <span class="keyword">this</span>(context, <span class="literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-1-怀疑点1：与-ViewBinding-不支持布局中有自定义的-View-控件有关？"><a href="#2-2-1-怀疑点1：与-ViewBinding-不支持布局中有自定义的-View-控件有关？" class="headerlink" title="2.2.1 怀疑点1：与 ViewBinding 不支持布局中有自定义的 View 控件有关？"></a>2.2.1 怀疑点1：与 ViewBinding 不支持布局中有自定义的 View 控件有关？</h4><p>虽然觉得不可能，但还是验证了下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GLESDemoFragment</span> : <span class="type">Fragment</span>() &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">var</span> _binding: FragmentGlesDemoBinding? = <span class="literal">null</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">val</span> mBinding <span class="keyword">get</span>() = _binding!!</span><br><span class="line">  </span><br><span class="line">	<span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    inflater: <span class="type">LayoutInflater</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">    container: <span class="type">ViewGroup</span>?,</span></span></span><br><span class="line"><span class="params"><span class="function">    savedInstanceState: <span class="type">Bundle</span>?</span></span></span><br><span class="line"><span class="params"><span class="function">  )</span></span>: View &#123;</span><br><span class="line">    <span class="comment">// 步骤一：将 ViewBinding 的代码注释掉</span></span><br><span class="line">    <span class="comment">//_binding = FragmentGlesDemoBinding.inflate(inflater, container, false)</span></span><br><span class="line">    <span class="comment">// return mBinding.root</span></span><br><span class="line">    <span class="comment">// 步骤二：使用 inflate XML 的方式加载 View</span></span><br><span class="line">    <span class="keyword">val</span> rootView = inflater.inflate(R.layout.fragment_gles_demo, container, <span class="literal">false</span>)</span><br><span class="line">    <span class="keyword">return</span> rootView</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>意外发现，<strong>这样竟然不会奔溃，可以运行</strong>了！</p>
+<p><img src="/images/app-run-success.png" alt="App 成功运行"></p>
+<p>不会吧，真与 ViewBinding 有关？抱着怀疑、实事求是的态度，尝试在上面的基础上，通过 <code>findViewById</code> 拿到 view 实例。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rootView = inflater.inflate(R.layout.fragment_gles_demo, container, <span class="literal">false</span>)</span><br><span class="line"><span class="keyword">val</span> myGlView = rootView.findViewById(R.id.my_gl_surface_view)</span><br><span class="line">Log.d(TAG, <span class="string">&quot;my gl view <span class="variable">$myGlView</span>&quot;</span>)</span><br><span class="line"><span class="keyword">return</span> rootView</span><br></pre></td></tr></table></figure>
+
+<p>果不其然，竟然<strong>获取到的为 <code>null</code></strong> ！！</p>
+<p>这说明在根 view 中，找不到 ID 为 <code>my_gl_surface_view</code> 的子 view，但从这并不复杂的 XML 布局中，可以清晰看到，ID 确确实实是对的，哪里错了呢？并且，为什么通过手动 inflate 布局 XML 的方式，程序能运行的好好地呢？</p>
+<h3 id="2-3-发现问题"><a href="#2-3-发现问题" class="headerlink" title="2.3 发现问题"></a>2.3 发现问题</h3><p>考虑到用了自定义 View，这种情况下，怀疑大概是自定义 View 写的有问题。</p>
+<p>回到 <code>MyGLSurfaceView</code> 的源码，突然注意到它的<strong>构造函数</strong>。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyGLSurfaceView</span>(context: Context, attrs: AttributeSet?) : GLSurfaceView(context) &#123;</span><br><span class="line">  <span class="comment">// ......</span></span><br><span class="line">  <span class="keyword">constructor</span>(context: Context) : <span class="keyword">this</span>(context, <span class="literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最开始自定义 View 的时候，主构造函数只用到了一个 Context，然后发现在 XML 中引入布局后，运行程序会发生奔溃。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">E AndroidRuntime: FATAL EXCEPTION: main</span><br><span class="line">E AndroidRuntime: Process: me.ljh.app, PID: 16008</span><br><span class="line">E AndroidRuntime: android.view.InflateException: Binary XML file line <span class="comment">#13 in me.ljh.app:layout/fragment_gles_demo: Binary XML file line #13 in me.ljh.app:layout/fragment_gles_demo: Error inflating class me.ljh.app.widget.MyGLSurfaceView</span></span><br><span class="line">E AndroidRuntime: Caused by: android.view.InflateException: Binary XML file line <span class="comment">#13 in me.ljh.app:layout/fragment_gles_demo: Error inflating class me.ljh.app.widget.MyGLSurfaceView</span></span><br><span class="line">E AndroidRuntime: Caused by: java.lang.NoSuchMethodException: me.ljh.app.widget.MyGLSurfaceView.&lt;init&gt; [class android.content.Context, interface android.util.AttributeSet]</span><br><span class="line">E AndroidRuntime: 	at java.lang.Class.getConstructor0(Class.java:2332)</span><br><span class="line">E AndroidRuntime: 	at java.lang.Class.getConstructor(Class.java:1728)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.createView(LayoutInflater.java:828)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:1010)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.createViewFromTag(LayoutInflater.java:965)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.rInflate(LayoutInflater.java:1127)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.rInflateChildren(LayoutInflater.java:1088)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.inflate(LayoutInflater.java:686)</span><br><span class="line">E AndroidRuntime: 	at android.view.LayoutInflater.inflate(LayoutInflater.java:538)</span><br><span class="line">E AndroidRuntime: 	at me.ljh.app.demo.GLESDemoFragment.onCreateView(GLESDemoFragment.kt:34)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.Fragment.performCreateView(Fragment.java:2995)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentStateManager.createView(FragmentStateManager.java:523)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentStateManager.moveToExpectedState(FragmentStateManager.java:261)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.executeOpsTogether(FragmentManager.java:1840)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.removeRedundantOperationsAndExecute(FragmentManager.java:1764)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.execPendingActions(FragmentManager.java:1701)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.dispatchStateChange(FragmentManager.java:2849)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentManager.dispatchActivityCreated(FragmentManager.java:2784)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentController.dispatchActivityCreated(FragmentController.java:262)</span><br><span class="line">E AndroidRuntime: 	at androidx.fragment.app.FragmentActivity.onStart(FragmentActivity.java:478)</span><br><span class="line">E AndroidRuntime: 	at androidx.appcompat.app.AppCompatActivity.onStart(AppCompatActivity.java:246)</span><br><span class="line">E AndroidRuntime: 	at android.app.Instrumentation.callActivityOnStart(Instrumentation.java:1433)</span><br><span class="line">E AndroidRuntime: 	at android.app.Activity.performStart(Activity.java:7923)</span><br><span class="line">E AndroidRuntime: 	at android.app.ActivityThread.handleStartActivity(ActivityThread.java:3337)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.performLifecycleSequence(TransactionExecutor.java:221)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.cycleToPath(TransactionExecutor.java:201)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeLifecycleState(TransactionExecutor.java:173)</span><br><span class="line">E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:97)</span><br><span class="line">E AndroidRuntime: 	at android.app.ActivityThread<span class="variable">$H</span>.handleMessage(ActivityThread.java:2049)</span><br><span class="line">E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:107)</span><br><span class="line">E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:228)</span><br><span class="line">E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:7589)</span><br><span class="line">E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)</span><br><span class="line">E AndroidRuntime: 	at com.android.internal.os.RuntimeInit<span class="variable">$MethodAndArgsCaller</span>.run(RuntimeInit.java:539)</span><br><span class="line">E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:953)</span><br></pre></td></tr></table></figure>
+
+<p>因此，给 <code>MyGlSurfaceView</code> 的主构造函数加入了 <code>AttributeSet</code> 参数，便没有了 Crash。但<strong>并没有把该参数传递给父类</strong> <code>GLSurfaceView</code>。</p>
+<p>猜测很大概率是这里，因此加上后尝试下。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MyGLSurfaceView</span>(context: Context, attrs: AttributeSet?) : GLSurfaceView(context, attrs) &#123;</span><br><span class="line">  <span class="comment">// ......</span></span><br><span class="line">  <span class="keyword">constructor</span>(context: Context) : <span class="keyword">this</span>(context, <span class="literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过 <code>findViewById</code> 能拿到 view 实例了，并且使用 ViewBinding 也正常了</strong>。</p>
+<p>看来真是这里的问题，但新问题来了，</p>
+<ol>
+<li>这个参数是干嘛用的？</li>
+<li>为什么 XML 方式创建 View 时一定需要它？</li>
+<li>为什么没有这个参数，findViewById 会找不到 View？如果确实要这样，有其他办法可以拿到吗？</li>
+<li>为什么自定义 View，通过 <code>setContenxtView(MyGLSurfaceView(this))</code> 类似的方式可以正常使用？</li>
+</ol>
+<h2 id="三、探究原理"><a href="#三、探究原理" class="headerlink" title="三、探究原理"></a>三、探究原理</h2><h3 id="3-1-AttributeSet-是什么？"><a href="#3-1-AttributeSet-是什么？" class="headerlink" title="3.1 AttributeSet 是什么？"></a>3.1 <code>AttributeSet</code> 是什么？</h3><p>在 AS 中，对着 <code>AttributeSet</code> 按 <code>Ctrl + B (Windows) / Command + B (MacOS)</code>，跳转到它的定义。</p>
+<blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A collection of attributes, as found associated with a tag in an XML</span></span><br><span class="line"><span class="comment"> * document.  Often you will not want to use this interface directly, instead</span></span><br><span class="line"><span class="comment"> * passing it to &#123;<span class="doctag">@link</span> android.content.res.Resources.Theme#obtainStyledAttributes(AttributeSet, int[], int, int)</span></span><br><span class="line"><span class="comment"> * Resources.Theme.obtainStyledAttributes()&#125;</span></span><br><span class="line"><span class="comment"> * which will take care of parsing the attributes for you.  In particular,</span></span><br><span class="line"><span class="comment"> * the Resources API will convert resource references (attribute values such as</span></span><br><span class="line"><span class="comment"> * &quot;<span class="doctag">@string</span>/my_label&quot; in the original XML) to the desired type</span></span><br><span class="line"><span class="comment"> * for you; if you use AttributeSet directly then you will need to manually</span></span><br><span class="line"><span class="comment"> * check for resource references</span></span><br><span class="line"><span class="comment"> * (with &#123;<span class="doctag">@link</span> #getAttributeResourceValue(int, int)&#125;) and do the resource</span></span><br><span class="line"><span class="comment"> * lookup yourself if needed.  Direct use of AttributeSet also prevents the</span></span><br><span class="line"><span class="comment"> * application of themes and styles when retrieving attribute values.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This interface provides an efficient mechanism for retrieving</span></span><br><span class="line"><span class="comment"> * data from compiled XML files, which can be retrieved for a particular</span></span><br><span class="line"><span class="comment"> * XmlPullParser through &#123;<span class="doctag">@link</span> Xml#asAttributeSet</span></span><br><span class="line"><span class="comment"> * Xml.asAttributeSet()&#125;.  Normally this will return an implementation</span></span><br><span class="line"><span class="comment"> * of the interface that works on top of a generic XmlPullParser, however it</span></span><br><span class="line"><span class="comment"> * is more useful in conjunction with compiled XML resources:</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * &lt;pre&gt;</span></span><br><span class="line"><span class="comment"> * XmlPullParser parser = resources.getXml(myResource);</span></span><br><span class="line"><span class="comment"> * AttributeSet attributes = Xml.asAttributeSet(parser);&lt;/pre&gt;</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * &lt;p&gt;The implementation returned here, unlike using</span></span><br><span class="line"><span class="comment"> * the implementation on top of a generic XmlPullParser,</span></span><br><span class="line"><span class="comment"> * is highly optimized by retrieving pre-computed information that was</span></span><br><span class="line"><span class="comment"> * generated by aapt when compiling your resources.  For example,</span></span><br><span class="line"><span class="comment"> * the &#123;<span class="doctag">@link</span> #getAttributeFloatValue(int, float)&#125; method returns a floating</span></span><br><span class="line"><span class="comment"> * point number previous stored in the compiled resource instead of parsing</span></span><br><span class="line"><span class="comment"> * at runtime the string originally in the XML file.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This interface also provides additional information contained in the</span></span><br><span class="line"><span class="comment"> * compiled XML resource that is not available in a normal XML file, such</span></span><br><span class="line"><span class="comment"> * as &#123;<span class="doctag">@link</span> #getAttributeNameResource(int)&#125; which returns the resource</span></span><br><span class="line"><span class="comment"> * identifier associated with a particular XML attribute name.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> XmlPullParser</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure></blockquote>
+<p>一大串有点长，总结就是：这是 XML 里面，对一个 View 配置的属性集合。比如<code>android:id=&quot;@+id/my_gl_surface_view&quot;</code>、<code>android:layout_width=&quot;match_parent&quot;</code>、<code>android:layout_height=&quot;match_parent&quot;</code>，它们会被 XML Parser 解析成一个个 Java 对象，<code>AttributeSet</code> 就是这些对象的集合。</p>
+<p>这就回答了前面的 1、2、3、4 个问题：</p>
+<ol>
+<li>这个参数，用于 XML 转换为 Java 对象时，传递 XML 中关于 view 实例的描述信息，包括它的<code>id</code>、宽、高……</li>
+<li>显然，通过 XML 绘制 View 的方式一定会有这个参数。</li>
+<li>没有这个参数，通过 <code>android:id=&quot;@+id/my_gl_surface_view</code> 方式指定的 id 自然就不会对 view 生效；如果一定要获取呢？既然能拿到父 view，就肯定有办法。我目前想到的是通过 <code>rootView.children</code> 的方式去遍历获取子 view 对象。但说实话没必要这样折腾自己。</li>
+<li>显然，通过代码的方式，当然可以不提供了。</li>
+</ol>
+<h2 id="四、结束语"><a href="#四、结束语" class="headerlink" title="四、结束语"></a>四、结束语</h2><p>感觉好快就破案了，貌似有些潦草……</p>
+<p>其实这问题在于，<strong>要理解 XML 到 UI 的原理</strong>，如果理解了，那就不会很难。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/12/19/fragment-requireContext-throw-not-attached-to-a-context/" rel="prev" title="Fragment 中调用 requireContext() 报错 not attached to a context">
+                  <i class="fa fa-angle-left"></i> Fragment 中调用 requireContext() 报错 not attached to a context
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/03/26/android-startup-source-code-analysis/" rel="next" title="Android Startup 使用和源码分析">
+                  Android Startup 使用和源码分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments"><div id="twikoo-comments"></div></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Li Jiahui</span>
+  </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">14k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">50 分钟</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <script class="next-config" data-name="leancloud_visitors" type="application/json">{"enable":true,"app_id":"KPdKpT6fYBrDy8Fe3CXwldqH-gzGzoHsz","app_key":"WyKTvJaO7JzlUeDMhyUq1yge","server_url":"https://kpdkpt6f.lc-cn-n1-shared.com","security":true}</script>
+  <script src="/js/third-party/statistics/lean-analytics.js"></script>
+
+
+<script class="next-config" data-name="twikoo" type="application/json">{"enable":true,"visitor":false,"envId":"https://twitoo-mzzx09z7d-chenyusheng-ljhaccn.vercel.app/","el":"#twikoo-comments"}</script>
+<script>
+document.addEventListener('page:loaded', () => {
+  NexT.utils.loadComments(CONFIG.twikoo.el)
+    .then(() => NexT.utils.getScript(
+      CONFIG.twikoo.jsUrl || 'https://cdn.jsdelivr.net/npm/twikoo/dist/twikoo.all.min.js',
+      { condition: window.twikoo }
+    ))
+    .then(() => {
+      twikoo.init(CONFIG.twikoo);
+    });
+});
+</script>
+<style>
+.post-block, .comments {
+  overflow: visible;
+}
+.tk-owo-emotion {
+  display: inline-block;
+}
+</style>
+
+</body>
+</html>
